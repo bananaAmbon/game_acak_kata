@@ -1,0 +1,10 @@
+buku
+meja
+kursi
+pintu
+pagar
+sepatu
+kacamata
+baju
+celana
+topi
