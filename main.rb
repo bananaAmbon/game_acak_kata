@@ -1,42 +1,43 @@
+require_relative 'question'
 puts "Game Acak Kata"
 puts "--------------"
-puts "Tekan Enter untuk mulai permainan."
+puts "Level permainan : "
+puts "1. Level 1."
+puts "2. Level 2."
+puts "3. Level 3."
+print "Masukan pilihan level (1,2,3): "
 
 start = false
 score = 0
-input = gets
+input = gets.chomp.to_i
 
-if input == "\n"
-  start = true
-  questions = IO.readlines("questions.txt").map {|s| s.chomp}.shuffle
-end
+questions = Question.new input
+start = true if questions
 
 while start
-  random_question = questions.sample(1)
-  questions -= random_question
+  question = questions.current_question
 
-  question = random_question.map {|q| q.split("").shuffle.join}
-
-  unless random_question.empty?
-    puts "Tebak Kata : #{question.first}"
+  unless question.empty?
+    puts "Tebak Kata : #{question.join(" ")}"
     
     correct = false
     while correct == false
       print "Jawaban: "
       answer = gets
-      correct = answer.split(" ") == random_question
+      correct = questions.answer_correct? answer
       score += 1 if correct
       correct ? result = "BENAR point anda : #{score}!\n" : result = "SALAH! Silakan Coba lagi\n"
       puts result
+      print "\n"
     end
   else
+    puts "--------------"
     puts "Permainan selesai."
+    puts "--------------"
     print "Ingin coba lagi [Y/t]? : "
     answer = gets.chomp
 
-    if answer == "Y" || answer == "y"
-      questions = IO.readlines("questions.txt").map {|s| s.chomp}.shuffle
-    else
+    unless questions.continue? answer
       start = false
     end
   end
